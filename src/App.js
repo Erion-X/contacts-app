@@ -1,10 +1,10 @@
 import { contacts } from './contactData';
-import contactTable from './contactTable';
+import ContactsTable from './ContactsTable';
 
 function App() {
   return (
     <div className="App">
-      Contacts App <div>{contactTable(contacts)}</div>
+      Contacts App <div>{ContactsTable(contacts)}</div>
     </div>
   );
 }
