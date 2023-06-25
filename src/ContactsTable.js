@@ -1,3 +1,5 @@
+import Popup from './Popup';
+
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -10,38 +12,46 @@ import ButtonBase from '@mui/material/ButtonBase';
 import { useState } from 'react';
 
 export default function ContactsTable(contacts) {
-  const [openDialog, setOpenDialog] = useState(false);
+  const [openPopup, setOpenPopup] = useState(false);
+  const [selectedContact, setSelectedContact] = useState({});
 
-  function handleOpenDialog(e, idx) {
-    e.preventDefault();
-    setOpenDialog(true);
-    console.log(idx);
+  function handleOpenPopup(contact) {
+    setSelectedContact(contact);
+    setOpenPopup(true);
+  }
+
+  function handleClosePopup() {
+    setOpenPopup(false);
+    setSelectedContact({});
   }
 
   return (
-    <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 400 }}>
-        <TableHead>
-          <TableRow>
-            <TableCell>Name</TableCell>
-            <TableCell align="right">City, State</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {contacts.map((contact, idx) => (
-            <TableRow key={idx}>
-              <TableCell>
-                <ButtonBase onClick={(e) => handleOpenDialog(e, idx)}>
-                  {contact.firstName} {contact.middleName} {contact.lastName}
-                </ButtonBase>
-              </TableCell>
-              <TableCell align="right">
-                {contact.city}, {contact.state}
-              </TableCell>
+    <div>
+      {openPopup ? Popup(openPopup, handleClosePopup, selectedContact) : null}
+      <TableContainer component={Paper}>
+        <Table sx={{ minWidth: 400 }}>
+          <TableHead>
+            <TableRow>
+              <TableCell>Name</TableCell>
+              <TableCell align="right">City, State</TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+          </TableHead>
+          <TableBody>
+            {contacts.map((contact, idx) => (
+              <TableRow key={idx}>
+                <TableCell>
+                  <ButtonBase onClick={() => handleOpenPopup(contact)}>
+                    {contact.firstName} {contact.middleName} {contact.lastName}
+                  </ButtonBase>
+                </TableCell>
+                <TableCell align="right">
+                  {contact.city}, {contact.state}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </div>
   );
 }
