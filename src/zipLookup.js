@@ -3,6 +3,10 @@ import axios from 'axios';
 const USPS_API_URL = 'https://secure.shippingapis.com/ShippingAPI.dll';
 const USER_ID = '2STUDEF595853';
 
+const capitalizeFirstLetter = (str) => {
+  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+};
+
 export default async function lookupCityState(zipCode) {
   try {
     const response = await axios.get(USPS_API_URL, {
@@ -13,7 +17,9 @@ export default async function lookupCityState(zipCode) {
     });
     const parser = new DOMParser();
     const xmlDoc = parser.parseFromString(response.data, 'text/xml');
-    const city = xmlDoc.getElementsByTagName('City')[0].innerHTML;
+    const city = capitalizeFirstLetter(
+      xmlDoc.getElementsByTagName('City')[0].innerHTML
+    );
     const state = xmlDoc.getElementsByTagName('State')[0].innerHTML;
 
     return {

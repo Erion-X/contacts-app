@@ -49,20 +49,6 @@ export default function Form(
       });
   };
 
-  const test = {
-    id: 2,
-    firstName: 'test',
-    middleName: 'test',
-    lastName: 'test',
-    DOB: '2018-04-05',
-    phoneNumber: '555-555-5555',
-    addressLn1: 'asdf',
-    addressLn2: 'asdf',
-    city: 'asdf',
-    state: 'asdf',
-    zipCode: 'asdf',
-  };
-
   return (
     <Box
       component="form"
@@ -167,7 +153,7 @@ export default function Form(
           variant="contained"
           color="primary"
           onClick={(e) => {
-            updateContact(e, test);
+            updateContact(e);
           }}
         >
           Submit
