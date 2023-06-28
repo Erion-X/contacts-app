@@ -7,6 +7,7 @@ import { InputAdornment } from '@mui/material';
 import { IconButton } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import lookupCityState from './zipLookup';
+import CircularProgress from '@mui/material/CircularProgress';
 
 export default function Form(
   selectedContact,
@@ -22,6 +23,7 @@ export default function Form(
 
   // Zip Code Button and Lookup
   const [zipLookupActive, setZipLookupActive] = useState(false);
+  const [loadingZip, setLoadingZip] = useState(false);
 
   useEffect(() => {
     if (selectedContact.zipCode.length === 5) {
@@ -33,6 +35,7 @@ export default function Form(
 
   const handleZipLookup = (e) => {
     e.preventDefault();
+    setLoadingZip(true);
     lookupCityState(selectedContact.zipCode)
       .then((result) => {
         console.log('City:', result.city);
@@ -42,7 +45,10 @@ export default function Form(
           city: result.city,
           state: result.state,
         });
-        console.log(selectedContact);
+        //For Showcase Only
+        setTimeout(() => {
+          setLoadingZip(false);
+        }, 600);
       })
       .catch((error) => {
         console.error('Error:', error);
@@ -89,6 +95,7 @@ export default function Form(
         name="DOB"
         value={selectedContact.DOB}
         required
+        onChange={handleInput}
         InputProps={{
           inputProps: { max: today },
         }}
@@ -115,7 +122,7 @@ export default function Form(
         value={selectedContact.city}
         onChange={handleInput}
         required
-      ></TextField>
+      />
       <TextField
         label="State"
         name="state"
@@ -130,6 +137,7 @@ export default function Form(
         onChange={handleInput}
         required
         InputProps={{
+          inputProps: { maxLength: 5, type: 'tel' },
           endAdornment: (
             <InputAdornment position="end">
               <IconButton
@@ -141,7 +149,13 @@ export default function Form(
                   handleZipLookup(e);
                 }}
               >
-                <SearchIcon />
+                {loadingZip ? (
+                  <Box sx={{ display: 'flex' }}>
+                    <CircularProgress />
+                  </Box>
+                ) : (
+                  <SearchIcon />
+                )}
               </IconButton>
             </InputAdornment>
           ),
@@ -152,7 +166,7 @@ export default function Form(
           type="submit"
           variant="contained"
           color="primary"
-          onClick={(e) => {
+          onSubmit={(e) => {
             updateContact(e);
           }}
         >
