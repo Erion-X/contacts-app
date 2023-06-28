@@ -4,8 +4,21 @@ import ContactsTable from './ContactsTable';
 import Popup from './Popup';
 
 function App() {
+  const contact = {
+    firstName: '',
+    middleName: '',
+    lastName: '',
+    DOB: '',
+    phoneNumber: '',
+    addressLn1: '',
+    addressLn2: '',
+    city: '',
+    state: '',
+    zipCode: '',
+  };
+
   const [contactsList, setContactsList] = useState([contactsData]);
-  const [selectedContact, setSelectedContact] = useState({});
+  const [selectedContact, setSelectedContact] = useState(contact);
   const [openPopup, setOpenPopup] = useState(false);
 
   //Opens Edit Contact Form

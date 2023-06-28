@@ -1,7 +1,11 @@
+import { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import { Button } from '@mui/material';
 import Divider from '@mui/material/Divider';
+import { InputAdornment } from '@mui/material';
+import { IconButton } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
 
 export default function Form(selectedContact, setSelectedContact) {
   const today = new Date().toISOString().slice(0, -14);
@@ -10,6 +14,16 @@ export default function Form(selectedContact, setSelectedContact) {
     let value = e.target.value;
     setSelectedContact({ ...selectedContact, [e.target.name]: value });
   };
+
+  // Zip Code Button and Lookup
+  const [zipLookupActive, setZipLookupActive] = useState(true);
+  useEffect(() => {
+    if (selectedContact.zipCode.length === 5) {
+      setZipLookupActive(true);
+    } else {
+      setZipLookupActive(false);
+    }
+  }, [selectedContact.zipCode]);
 
   return (
     <Box
@@ -55,9 +69,9 @@ export default function Form(selectedContact, setSelectedContact) {
           inputProps: { max: today },
         }}
       />
-
-      <Divider variant="middle">Address</Divider>
-
+      <div>
+        <Divider variant="middle">Address</Divider>
+      </div>
       <TextField
         label="Address Line 1"
         name="addressLn1"
@@ -77,7 +91,9 @@ export default function Form(selectedContact, setSelectedContact) {
         value={selectedContact.city}
         onChange={handleInput}
         required
-      />
+      >
+        <button>Q</button>
+      </TextField>
       <TextField
         label="State"
         name="state"
@@ -91,11 +107,25 @@ export default function Form(selectedContact, setSelectedContact) {
         value={selectedContact.zipCode}
         onChange={handleInput}
         required
-      />
-
-      <Button type="submit" variant="contained" color="primary">
-        Submit
-      </Button>
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position="end">
+              <IconButton
+                edge="end"
+                color="primary"
+                disabled={!zipLookupActive}
+              >
+                <SearchIcon />
+              </IconButton>
+            </InputAdornment>
+          ),
+        }}
+      ></TextField>
+      <div>
+        <Button type="submit" variant="contained" color="primary">
+          Submit
+        </Button>
+      </div>
     </Box>
   );
 }
