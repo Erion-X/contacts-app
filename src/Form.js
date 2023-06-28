@@ -18,12 +18,31 @@ export default function Form(
 
   const handleInput = (e) => {
     let value = e.target.value;
+    //Enforcing Numeric Input on Phone Number and Zip Code
+    if (e.target.name === 'phoneNumber' || e.target.name === 'zipCode') {
+      value = value.replace(/\D/g, '');
+      //Enforcing US Phone Number Formatt
+      if (
+        e.target.name === 'phoneNumber' &&
+        value.length > 3 &&
+        value.length <= 6
+      ) {
+        value = `${value.slice(0, 3)}-${value.slice(3)}`;
+      } else if (value.length > 6) {
+        value = `${value.slice(0, 3)}-${value.slice(3, 6)}-${value.slice(
+          6,
+          10
+        )}`;
+      }
+    }
+
     setSelectedContact({ ...selectedContact, [e.target.name]: value });
   };
 
   // Zip Code Button and Lookup
   const [zipLookupActive, setZipLookupActive] = useState(false);
   const [loadingZip, setLoadingZip] = useState(false);
+  const [lookupError, setLookupError] = useState(false);
 
   useEffect(() => {
     if (selectedContact.zipCode.length === 5) {
@@ -51,6 +70,11 @@ export default function Form(
         }, 600);
       })
       .catch((error) => {
+        setLookupError(true);
+        setLoadingZip(false);
+        setTimeout(() => {
+          setLookupError(false);
+        }, 3000);
         console.error('Error:', error);
       });
   };
@@ -91,7 +115,7 @@ export default function Form(
       />
       <TextField
         type="date"
-        label="Birthday"
+        label="Date of Birth"
         name="DOB"
         value={selectedContact.DOB}
         required
@@ -136,6 +160,7 @@ export default function Form(
         value={selectedContact.zipCode}
         onChange={handleInput}
         required
+        helperText={lookupError ? 'Zip code could not be found...' : null}
         InputProps={{
           inputProps: { maxLength: 5, type: 'tel' },
           endAdornment: (
@@ -149,13 +174,7 @@ export default function Form(
                   handleZipLookup(e);
                 }}
               >
-                {loadingZip ? (
-                  <Box sx={{ display: 'flex' }}>
-                    <CircularProgress />
-                  </Box>
-                ) : (
-                  <SearchIcon />
-                )}
+                {loadingZip ? <CircularProgress /> : <SearchIcon />}
               </IconButton>
             </InputAdornment>
           ),
@@ -167,6 +186,7 @@ export default function Form(
           variant="contained"
           color="primary"
           onSubmit={(e) => {
+            console.log('onsubmittriggered');
             updateContact(e);
           }}
         >
