@@ -8,7 +8,11 @@ import { IconButton } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import lookupCityState from './zipLookup';
 
-export default function Form(selectedContact, setSelectedContact) {
+export default function Form(
+  selectedContact,
+  setSelectedContact,
+  updateContact
+) {
   const today = new Date().toISOString().slice(0, -14);
 
   const handleInput = (e) => {
@@ -43,6 +47,20 @@ export default function Form(selectedContact, setSelectedContact) {
       .catch((error) => {
         console.error('Error:', error);
       });
+  };
+
+  const test = {
+    id: 2,
+    firstName: 'test',
+    middleName: 'test',
+    lastName: 'test',
+    DOB: '2018-04-05',
+    phoneNumber: '555-555-5555',
+    addressLn1: 'asdf',
+    addressLn2: 'asdf',
+    city: 'asdf',
+    state: 'asdf',
+    zipCode: 'asdf',
   };
 
   return (
@@ -144,7 +162,14 @@ export default function Form(selectedContact, setSelectedContact) {
         }}
       ></TextField>
       <div>
-        <Button type="submit" variant="contained" color="primary">
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+          onClick={(e) => {
+            updateContact(e, test);
+          }}
+        >
           Submit
         </Button>
       </div>

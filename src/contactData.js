@@ -2,6 +2,7 @@ import contactGen from './contactGen';
 
 export const contactsData = [
   contactGen(
+    1,
     'Erion',
     'S',
     'Xeneli',
@@ -14,6 +15,7 @@ export const contactsData = [
     94611
   ),
   contactGen(
+    2,
     'John',
     '',
     'Smith',
@@ -26,6 +28,7 @@ export const contactsData = [
     35782
   ),
   contactGen(
+    3,
     'Jane',
     'B',
     'Doe',
@@ -38,6 +41,7 @@ export const contactsData = [
     10708
   ),
   contactGen(
+    4,
     'Jannet',
     '',
     'Lightheart',
@@ -50,6 +54,7 @@ export const contactsData = [
     45505
   ),
   contactGen(
+    5,
     'Tim',
     'D',
     'Parsley',

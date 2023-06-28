@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { contactsData } from './contactData';
 import ContactsTable from './ContactsTable';
 import Popup from './Popup';
 
 function App() {
-  const contact = {
+  const emptyContact = {
+    id: Number,
     firstName: '',
     middleName: '',
     lastName: '',
@@ -17,9 +18,13 @@ function App() {
     zipCode: '',
   };
 
-  const [contactsList, setContactsList] = useState([contactsData]);
-  const [selectedContact, setSelectedContact] = useState(contact);
+  const [contactsList, setContactsList] = useState([]);
+  const [selectedContact, setSelectedContact] = useState(emptyContact);
   const [openPopup, setOpenPopup] = useState(false);
+
+  useEffect(() => {
+    setContactsList(contactsData);
+  }, []);
 
   //Opens Edit Contact Form
   function editContact(singleContact) {
@@ -29,8 +34,19 @@ function App() {
 
   //Closes Edit/New Contact Form
   function handleClosePopup() {
+    setSelectedContact(emptyContact);
     setOpenPopup(false);
-    setSelectedContact({});
+  }
+
+  //Updates Existing Contact
+  function updateContact(e) {
+    e.preventDefault();
+    setContactsList(
+      contactsList.map((contact) => {
+        return contact.id === selectedContact.id ? selectedContact : contact;
+      })
+    );
+    handleClosePopup();
   }
 
   return (
@@ -41,7 +57,8 @@ function App() {
           openPopup,
           selectedContact,
           handleClosePopup,
-          setSelectedContact
+          setSelectedContact,
+          updateContact
         )}
       </div>
     </div>

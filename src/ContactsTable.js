@@ -7,7 +7,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import ButtonBase from '@mui/material/ButtonBase';
 
-export default function ContactsTable([contactsList], editContact) {
+export default function ContactsTable(contactsList, editContact) {
   return (
     <div>
       <TableContainer component={Paper}>

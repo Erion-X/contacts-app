@@ -1,4 +1,5 @@
 export default function contactGen(
+  id,
   firstName,
   middleName,
   lastName,
@@ -11,6 +12,7 @@ export default function contactGen(
   zipCode
 ) {
   return {
+    id,
     firstName,
     middleName,
     lastName,
