@@ -6,6 +6,7 @@ import Divider from '@mui/material/Divider';
 import { InputAdornment } from '@mui/material';
 import { IconButton } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
+import lookupCityState from './zipLookup';
 
 export default function Form(selectedContact, setSelectedContact) {
   const today = new Date().toISOString().slice(0, -14);
@@ -16,7 +17,8 @@ export default function Form(selectedContact, setSelectedContact) {
   };
 
   // Zip Code Button and Lookup
-  const [zipLookupActive, setZipLookupActive] = useState(true);
+  const [zipLookupActive, setZipLookupActive] = useState(false);
+
   useEffect(() => {
     if (selectedContact.zipCode.length === 5) {
       setZipLookupActive(true);
@@ -24,6 +26,24 @@ export default function Form(selectedContact, setSelectedContact) {
       setZipLookupActive(false);
     }
   }, [selectedContact.zipCode]);
+
+  const handleZipLookup = (e) => {
+    e.preventDefault();
+    lookupCityState(selectedContact.zipCode)
+      .then((result) => {
+        console.log('City:', result.city);
+        console.log('State:', result.state);
+        setSelectedContact({
+          ...selectedContact,
+          city: result.city,
+          state: result.state,
+        });
+        console.log(selectedContact);
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  };
 
   return (
     <Box
@@ -91,9 +111,7 @@ export default function Form(selectedContact, setSelectedContact) {
         value={selectedContact.city}
         onChange={handleInput}
         required
-      >
-        <button>Q</button>
-      </TextField>
+      ></TextField>
       <TextField
         label="State"
         name="state"
@@ -113,7 +131,11 @@ export default function Form(selectedContact, setSelectedContact) {
               <IconButton
                 edge="end"
                 color="primary"
+                type="submit"
                 disabled={!zipLookupActive}
+                onClick={(e) => {
+                  handleZipLookup(e);
+                }}
               >
                 <SearchIcon />
               </IconButton>
