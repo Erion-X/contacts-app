@@ -57,8 +57,6 @@ export default function Form(
     setLoadingZip(true);
     lookupCityState(selectedContact.zipCode)
       .then((result) => {
-        console.log('City:', result.city);
-        console.log('State:', result.state);
         setSelectedContact({
           ...selectedContact,
           city: result.city,
@@ -124,9 +122,10 @@ export default function Form(
           inputProps: { max: today },
         }}
       />
-      <div>
+      <Box my={2}>
         <Divider variant="middle">Address</Divider>
-      </div>
+      </Box>
+
       <TextField
         label="Address Line 1"
         name="addressLn1"
@@ -185,8 +184,8 @@ export default function Form(
           type="submit"
           variant="contained"
           color="primary"
-          onSubmit={(e) => {
-            console.log('onsubmittriggered');
+          onClick={(e) => {
+            e.preventDefault();
             updateContact(e);
           }}
         >

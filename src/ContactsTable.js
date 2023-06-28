@@ -12,9 +12,10 @@ export default function ContactsTable(contactsList, editContact) {
     <div>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 400 }}>
-          <TableHead>
+          <TableHead color="gray">
             <TableRow>
               <TableCell>Name</TableCell>
+              <TableCell align="right">Phone Number</TableCell>
               <TableCell align="right">City, State</TableCell>
             </TableRow>
           </TableHead>
@@ -26,6 +27,7 @@ export default function ContactsTable(contactsList, editContact) {
                     {contact.firstName} {contact.middleName} {contact.lastName}
                   </ButtonBase>
                 </TableCell>
+                <TableCell align="right">{contact.phoneNumber}</TableCell>
                 <TableCell align="right">
                   {contact.city}, {contact.state}
                 </TableCell>
