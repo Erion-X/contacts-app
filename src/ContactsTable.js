@@ -1,5 +1,3 @@
-import Popup from './Popup';
-
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -9,25 +7,9 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import ButtonBase from '@mui/material/ButtonBase';
 
-import { useState } from 'react';
-
-export default function ContactsTable(contacts) {
-  const [openPopup, setOpenPopup] = useState(false);
-  const [selectedContact, setSelectedContact] = useState({});
-
-  function handleOpenPopup(contact) {
-    setSelectedContact(contact);
-    setOpenPopup(true);
-  }
-
-  function handleClosePopup() {
-    setOpenPopup(false);
-    setSelectedContact({});
-  }
-
+export default function ContactsTable([contactsList], editContact) {
   return (
     <div>
-      {openPopup ? Popup(openPopup, handleClosePopup, selectedContact) : null}
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 400 }}>
           <TableHead>
@@ -37,10 +19,10 @@ export default function ContactsTable(contacts) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {contacts.map((contact, idx) => (
+            {contactsList.map((contact, idx) => (
               <TableRow key={idx}>
                 <TableCell>
-                  <ButtonBase onClick={() => handleOpenPopup(contact)}>
+                  <ButtonBase onClick={() => editContact(contact)}>
                     {contact.firstName} {contact.middleName} {contact.lastName}
                   </ButtonBase>
                 </TableCell>

@@ -6,13 +6,18 @@ import DialogTitle from '@mui/material/DialogTitle';
 
 import Form from './Form';
 
-export default function Popup(openPopup, handleClosePopup, selectedContact) {
+export default function Popup(
+  openPopup,
+  selectedContact,
+  handleClosePopup,
+  setSelectedContact
+) {
   return (
     <Dialog open={openPopup}>
       <DialogTitle>
         {selectedContact ? 'Edit Contact' : 'New Contact'}
       </DialogTitle>
-      <DialogContent>{Form(selectedContact)}</DialogContent>
+      <DialogContent>{Form(selectedContact, setSelectedContact)}</DialogContent>
       <DialogActions>
         <Button onClick={() => handleClosePopup()}>Cancel</Button>
       </DialogActions>

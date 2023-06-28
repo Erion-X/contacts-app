@@ -1,6 +1,6 @@
 import contactGen from './contactGen';
 
-export const contacts = [
+export const contactsData = [
   contactGen(
     'Erion',
     'S',
