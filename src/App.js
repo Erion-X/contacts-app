@@ -109,7 +109,7 @@ function App() {
             <Button
               startIcon={<AddIcon />}
               variant="contained"
-              color="primary"
+              color="secondary"
               onClick={() => addContact()}
             >
               Add Contact

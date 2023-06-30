@@ -9,8 +9,8 @@ import SearchIcon from '@mui/icons-material/Search';
 import lookupCityState from './zipLookup';
 import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
-import Grid from '@mui/material/Unstable_Grid2';
 import Stack from '@mui/material/Stack';
+import Grid from '@mui/material/Grid';
 
 export default function Form(
   selectedContact,
@@ -109,20 +109,20 @@ export default function Form(
         ) : null}
       </Box>
 
-      <Box sx={{ flexGrow: 1 }}>
-        {/* <Stack
-          direction={{ xs: 'column', sm: 'row' }}
-          spacing={{ xs: 1, sm: 2, md: 4 }}
-        > */}
+      <Grid sx={12}>
         <TextField
+          sx={{ m: 1 }}
+          fullWidth="true"
           label="First Name"
           name="firstName"
           value={selectedContact.firstName}
           onChange={handleInput}
           required
+          onError={'error'}
         />
 
         <TextField
+          sx={2}
           label="Middle Name"
           name="middleName"
           value={selectedContact.middleName}
@@ -130,14 +130,14 @@ export default function Form(
         />
 
         <TextField
+          sx={3}
           label="Last Name"
           name="lastName"
           value={selectedContact.lastName}
           onChange={handleInput}
           required
         />
-        {/* </Stack> */}
-      </Box>
+      </Grid>
 
       <TextField
         label="Phone Number"
@@ -175,47 +175,49 @@ export default function Form(
         value={selectedContact.addressLn2}
         onChange={handleInput}
       />
-      <TextField
-        label="City"
-        name="city"
-        value={selectedContact.city}
-        onChange={handleInput}
-        required
-      />
-      <TextField
-        label="State"
-        name="state"
-        value={selectedContact.state}
-        onChange={handleInput}
-        required
-      />
-      <TextField
-        label="Zip Code"
-        name="zipCode"
-        value={selectedContact.zipCode}
-        onChange={handleInput}
-        required
-        helperText={lookupError ? 'Zip code could not be found...' : null}
-        InputProps={{
-          inputProps: { maxLength: 5, type: 'tel' },
-          endAdornment: (
-            <InputAdornment position="end">
-              <IconButton
-                edge="end"
-                color="primary"
-                type="button"
-                disabled={!zipLookupActive}
-                onClick={(e) => {
-                  handleZipLookup(e);
-                }}
-              >
-                {loadingZip ? <CircularProgress /> : <SearchIcon />}
-              </IconButton>
-            </InputAdornment>
-          ),
-        }}
-        Í
-      ></TextField>
+      <Grid sx={12}>
+        <TextField
+          label="City"
+          name="city"
+          value={selectedContact.city}
+          onChange={handleInput}
+          required
+        />
+        <TextField
+          label="State"
+          name="state"
+          value={selectedContact.state}
+          onChange={handleInput}
+          required
+        />
+        <TextField
+          label="Zip Code"
+          name="zipCode"
+          value={selectedContact.zipCode}
+          onChange={handleInput}
+          required
+          helperText={lookupError ? 'Zip code could not be found...' : null}
+          InputProps={{
+            inputProps: { maxLength: 5, type: 'tel' },
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  edge="end"
+                  color="primary"
+                  type="button"
+                  disabled={!zipLookupActive}
+                  onClick={(e) => {
+                    handleZipLookup(e);
+                  }}
+                >
+                  {loadingZip ? <CircularProgress /> : <SearchIcon />}
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+          Í
+        ></TextField>
+      </Grid>
 
       <Box
         display="flex"

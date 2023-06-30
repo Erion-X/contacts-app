@@ -11,7 +11,7 @@ export default function Popup(
   deleteContact
 ) {
   return (
-    <Dialog open={openPopup}>
+    <Dialog open={openPopup} maxWidth="sm">
       <DialogContent>
         {Form(
           selectedContact,
