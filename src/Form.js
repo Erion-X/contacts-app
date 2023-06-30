@@ -80,6 +80,10 @@ export default function Form(
   return (
     <Box
       component="form"
+      onSubmit={(e) => {
+        e.preventDefault();
+        updateContact();
+      }}
       sx={{
         '& .MuiTextField-root': { m: 1, width: '25ch' },
       }}
@@ -125,7 +129,6 @@ export default function Form(
       <Box my={2}>
         <Divider variant="middle">Address</Divider>
       </Box>
-
       <TextField
         label="Address Line 1"
         name="addressLn1"
@@ -167,7 +170,7 @@ export default function Form(
               <IconButton
                 edge="end"
                 color="primary"
-                type="submit"
+                type="button"
                 disabled={!zipLookupActive}
                 onClick={(e) => {
                   handleZipLookup(e);
@@ -178,18 +181,11 @@ export default function Form(
             </InputAdornment>
           ),
         }}
+        Í
       ></TextField>
       <div>
-        <Button
-          type="submit"
-          variant="contained"
-          color="primary"
-          onClick={(e) => {
-            e.preventDefault();
-            updateContact(e);
-          }}
-        >
-          Submit
+        <Button type="submit" variant="contained" color="primary">
+          Save
         </Button>
       </div>
     </Box>

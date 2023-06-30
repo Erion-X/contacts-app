@@ -54,8 +54,7 @@ function App() {
   }
 
   //Updates Existing Contacts
-  function updateContact(e) {
-    e.preventDefault();
+  function updateContact() {
     //New Contact
     if (selectedContact.id === '') {
       selectedContact.id = findLargestIdNumber() + 1;
