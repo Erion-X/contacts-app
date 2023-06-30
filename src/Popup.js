@@ -3,6 +3,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
+import Typography from '@mui/material/Typography';
 
 import Form from './Form';
 
@@ -11,19 +12,23 @@ export default function Popup(
   selectedContact,
   handleClosePopup,
   setSelectedContact,
-  updateContact
+  updateContact,
+  deleteContact
 ) {
   return (
     <Dialog open={openPopup}>
-      <DialogTitle>
-        {selectedContact.id ? 'Edit Contact' : 'New Contact'}
-      </DialogTitle>
+      {/* <DialogTitle>
+        <Typography>
+          {selectedContact.id ? 'Edit Contact' : 'New Contact'}
+        </Typography>
+      </DialogTitle> */}
       <DialogContent>
         {Form(
           selectedContact,
           setSelectedContact,
           updateContact,
-          handleClosePopup
+          handleClosePopup,
+          deleteContact
         )}
       </DialogContent>
     </Dialog>

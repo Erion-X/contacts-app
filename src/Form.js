@@ -8,13 +8,15 @@ import { IconButton } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import lookupCityState from './zipLookup';
 import CircularProgress from '@mui/material/CircularProgress';
-import Grid from '@mui/material/Unstable_Grid2';
+
+import Typography from '@mui/material/Typography';
 
 export default function Form(
   selectedContact,
   setSelectedContact,
   updateContact,
-  handleClosePopup
+  handleClosePopup,
+  deleteContact
 ) {
   const today = new Date().toISOString().slice(0, -14);
 
@@ -90,6 +92,21 @@ export default function Form(
         '& .MuiTextField-root': { m: 1, width: '25ch' },
       }}
     >
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        p={2}
+      >
+        <Typography variant="h6">
+          {selectedContact.id ? 'Edit Contact' : 'New Contact'}
+        </Typography>
+        {selectedContact.id ? (
+          <Button color="error" onClick={() => deleteContact()}>
+            Delete
+          </Button>
+        ) : null}
+      </Box>
       <TextField
         label="First Name"
         name="firstName"

@@ -53,9 +53,17 @@ function App() {
     setOpenPopup(false);
   }
 
-  //Updates Existing Contacts
+  //Deletes contact
+  function deleteContact() {
+    setContactsList(
+      contactsList.filter((contact) => contact.id !== selectedContact.id)
+    );
+    setSelectedContact(emptyContact);
+    setOpenPopup(false);
+  }
+
+  //Adds & Updates Existing Contacts
   function updateContact() {
-    //New Contact
     if (selectedContact.id === '') {
       selectedContact.id = findLargestIdNumber() + 1;
       setContactsList([selectedContact, ...contactsList]);
@@ -115,7 +123,8 @@ function App() {
             selectedContact,
             handleClosePopup,
             setSelectedContact,
-            updateContact
+            updateContact,
+            deleteContact
           )}
         </div>
       </Box>
