@@ -19,11 +19,13 @@ export default function Popup(
         {selectedContact.id ? 'Edit Contact' : 'New Contact'}
       </DialogTitle>
       <DialogContent>
-        {Form(selectedContact, setSelectedContact, updateContact)}
+        {Form(
+          selectedContact,
+          setSelectedContact,
+          updateContact,
+          handleClosePopup
+        )}
       </DialogContent>
-      <DialogActions>
-        <Button onClick={() => handleClosePopup()}>Cancel</Button>
-      </DialogActions>
     </Dialog>
   );
 }

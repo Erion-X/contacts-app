@@ -8,11 +8,13 @@ import { IconButton } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import lookupCityState from './zipLookup';
 import CircularProgress from '@mui/material/CircularProgress';
+import Grid from '@mui/material/Unstable_Grid2';
 
 export default function Form(
   selectedContact,
   setSelectedContact,
-  updateContact
+  updateContact,
+  handleClosePopup
 ) {
   const today = new Date().toISOString().slice(0, -14);
 
@@ -100,6 +102,13 @@ export default function Form(
         name="middleName"
         value={selectedContact.middleName}
         onChange={handleInput}
+        sx={{
+          width: 200,
+          '&:focus-within': {
+            width: '100%',
+          },
+          transition: 'width 1s',
+        }}
       />
       <TextField
         label="Last Name"
@@ -118,10 +127,12 @@ export default function Form(
       <TextField
         type="date"
         label="Date of Birth"
+        placeholder="none"
         name="DOB"
         value={selectedContact.DOB}
         required
         onChange={handleInput}
+        InputLabelProps={{ shrink: true }}
         InputProps={{
           inputProps: { max: today },
         }}
@@ -183,11 +194,18 @@ export default function Form(
         }}
         Í
       ></TextField>
-      <div>
+
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        p={2}
+      >
         <Button type="submit" variant="contained" color="primary">
           Save
         </Button>
-      </div>
+        <Button onClick={() => handleClosePopup()}>Cancel</Button>
+      </Box>
     </Box>
   );
 }
