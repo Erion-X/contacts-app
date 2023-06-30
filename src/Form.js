@@ -8,8 +8,9 @@ import { IconButton } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import lookupCityState from './zipLookup';
 import CircularProgress from '@mui/material/CircularProgress';
-
 import Typography from '@mui/material/Typography';
+import Grid from '@mui/material/Unstable_Grid2';
+import Stack from '@mui/material/Stack';
 
 export default function Form(
   selectedContact,
@@ -107,33 +108,37 @@ export default function Form(
           </Button>
         ) : null}
       </Box>
-      <TextField
-        label="First Name"
-        name="firstName"
-        value={selectedContact.firstName}
-        onChange={handleInput}
-        required
-      />
-      <TextField
-        label="Middle Name"
-        name="middleName"
-        value={selectedContact.middleName}
-        onChange={handleInput}
-        sx={{
-          width: 200,
-          '&:focus-within': {
-            width: '100%',
-          },
-          transition: 'width 1s',
-        }}
-      />
-      <TextField
-        label="Last Name"
-        name="lastName"
-        value={selectedContact.lastName}
-        onChange={handleInput}
-        required
-      />
+
+      <Box sx={{ flexGrow: 1 }}>
+        {/* <Stack
+          direction={{ xs: 'column', sm: 'row' }}
+          spacing={{ xs: 1, sm: 2, md: 4 }}
+        > */}
+        <TextField
+          label="First Name"
+          name="firstName"
+          value={selectedContact.firstName}
+          onChange={handleInput}
+          required
+        />
+
+        <TextField
+          label="Middle Name"
+          name="middleName"
+          value={selectedContact.middleName}
+          onChange={handleInput}
+        />
+
+        <TextField
+          label="Last Name"
+          name="lastName"
+          value={selectedContact.lastName}
+          onChange={handleInput}
+          required
+        />
+        {/* </Stack> */}
+      </Box>
+
       <TextField
         label="Phone Number"
         name="phoneNumber"

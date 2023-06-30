@@ -6,6 +6,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import ButtonBase from '@mui/material/ButtonBase';
+import Typography from '@mui/material/Typography';
 
 export default function ContactsTable(contactsList, editContact) {
   return (
@@ -14,9 +15,15 @@ export default function ContactsTable(contactsList, editContact) {
         <Table sx={{ minWidth: 400 }}>
           <TableHead color="gray">
             <TableRow>
-              <TableCell>Name</TableCell>
-              <TableCell align="right">Phone Number</TableCell>
-              <TableCell align="right">City, State</TableCell>
+              <TableCell>
+                <Typography variant="body1">Name</Typography>
+              </TableCell>
+              <TableCell align="right">
+                <Typography variant="body1">Phone Number</Typography>
+              </TableCell>
+              <TableCell align="right">
+                <Typography variant="body1">City, State</Typography>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -24,12 +31,19 @@ export default function ContactsTable(contactsList, editContact) {
               <TableRow key={idx}>
                 <TableCell>
                   <ButtonBase onClick={() => editContact(contact)}>
-                    {contact.firstName} {contact.middleName} {contact.lastName}
+                    <Typography variant="body1">
+                      {contact.firstName} {contact.middleName}{' '}
+                      {contact.lastName}
+                    </Typography>
                   </ButtonBase>
                 </TableCell>
-                <TableCell align="right">{contact.phoneNumber}</TableCell>
                 <TableCell align="right">
-                  {contact.city}, {contact.state}
+                  <Typography variant="body1">{contact.phoneNumber}</Typography>
+                </TableCell>
+                <TableCell align="right">
+                  <Typography variant="body1">
+                    {contact.city}, {contact.state}
+                  </Typography>
                 </TableCell>
               </TableRow>
             ))}
