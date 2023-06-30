@@ -16,7 +16,7 @@ export default function Popup(
   return (
     <Dialog open={openPopup}>
       <DialogTitle>
-        {selectedContact ? 'Edit Contact' : 'New Contact'}
+        {selectedContact.id ? 'Edit Contact' : 'New Contact'}
       </DialogTitle>
       <DialogContent>
         {Form(selectedContact, setSelectedContact, updateContact)}

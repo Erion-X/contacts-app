@@ -73,14 +73,12 @@ function App() {
   //Function to find unique ID
   function findLargestIdNumber() {
     let largestId = 0;
-
     for (let i = 0; i < contactsList.length; i++) {
       const contact = contactsList[i];
       if (contact.id > largestId) {
         largestId = contact.id;
       }
     }
-
     return largestId;
   }
 
@@ -102,7 +100,6 @@ function App() {
               Contacts App
             </Typography>
             <Button
-              color="inherit"
               startIcon={<AddIcon />}
               variant="contained"
               color="primary"
