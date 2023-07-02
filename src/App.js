@@ -37,8 +37,8 @@ function App() {
 
   //Opens Edit Contact Form
   function editContact(singleContact) {
-    setOpenPopup(true);
     setSelectedContact({ ...singleContact });
+    setOpenPopup(true);
   }
 
   //Opens Add Contact Form

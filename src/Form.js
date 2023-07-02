@@ -1,4 +1,7 @@
 import { useState, useEffect } from 'react';
+
+import { useForm } from 'react-hook-form';
+
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import { Button } from '@mui/material';
@@ -24,6 +27,18 @@ export default function Form(
   const month = String(date.getMonth() + 1).padStart(2, '0');
   const day = String(date.getDate()).padStart(2, '0');
   const today = `${year}-${month}-${day}`;
+
+  //REACT-HOOK-FORMS
+
+  const form = useForm({
+    defaultValues: { ...selectedContact },
+  });
+  const { register, handleSubmit, formState } = form;
+  const { errors } = formState;
+
+  const onSave = (formData) => {
+    console.log(errors);
+  };
 
   const handleInput = (e) => {
     let value = e.target.value;
@@ -89,10 +104,8 @@ export default function Form(
   return (
     <Box
       component="form"
-      onSubmit={(e) => {
-        e.preventDefault();
-        updateContact();
-      }}
+      noValidate
+      onSubmit={handleSubmit(onSave)}
       sx={{
         '& .MuiTextField-root': { m: 1, width: '25ch' },
       }}
@@ -113,100 +126,101 @@ export default function Form(
         ) : null}
       </Box>
 
-      <Grid sx={12}>
+      <Grid>
         <TextField
-          sx={{ m: 1 }}
           label="First Name"
           name="firstName"
-          value={selectedContact.firstName}
-          onChange={handleInput}
-          required
+          {...register('firstName', { required: 'First name is required' })}
+          error={Boolean(errors.firstName)}
+          helperText={errors.firstName?.message}
         />
 
         <TextField
-          sx={2}
           label="Middle Name"
           name="middleName"
-          value={selectedContact.middleName}
-          onChange={handleInput}
+          {...register('middleName')}
         />
 
         <TextField
-          sx={3}
           label="Last Name"
           name="lastName"
-          value={selectedContact.lastName}
-          onChange={handleInput}
-          required
+          {...register('lastName', { required: 'Last name is required' })}
+          error={Boolean(errors.lastName)}
+          helperText={errors.lastName?.message}
         />
       </Grid>
 
       <TextField
         label="Phone Number"
         name="phoneNumber"
-        value={selectedContact.phoneNumber}
-        onChange={handleInput}
-        required
-        inputProps={{
-          maxLength: 12,
-          pattern: '^\\d{0,3}(-\\d{0,3})?(-\\d{0,4})?$',
-        }}
+        {...register('phoneNumber', {
+          required: 'Phone number is required',
+          pattern: {
+            value: /^\(?([0-9]{3})\)?[-.●]?([0-9]{3})[-.●]?([0-9]{4})$/,
+            message: 'Please enter a valid US phone number',
+          },
+        })}
+        error={Boolean(errors.phoneNumber)}
+        helperText={errors.phoneNumber?.message}
       />
+
       <TextField
-        type="date"
         label="Date of Birth"
-        placeholder="none"
         name="DOB"
-        value={selectedContact.DOB}
-        required
-        onChange={handleInput}
+        type="date"
+        {...register('DOB', { required: 'Date of birth is required' })}
+        placeholder="none"
         InputLabelProps={{ shrink: true }}
         InputProps={{
           inputProps: { max: today },
         }}
+        error={Boolean(errors.DOB)}
+        helperText={errors.DOB?.message}
       />
+
       <Box my={2}>
         <Divider variant="middle">Address</Divider>
       </Box>
       <TextField
         label="Address Line 1"
         name="addressLn1"
-        value={selectedContact.addressLn1}
-        onChange={handleInput}
-        required
+        {...register('addressLn1', { required: 'Address is required' })}
+        error={Boolean(errors.addressLn1)}
+        helperText={errors.addressLn1?.message}
       />
       <TextField
         label="Address Line 2"
         name="addressLn2"
-        value={selectedContact.addressLn2}
-        onChange={handleInput}
+        {...register('addressLn2')}
       />
-      <Grid sx={12}>
+      <Grid>
         <TextField
           label="City"
           name="city"
-          value={selectedContact.city}
-          onChange={handleInput}
-          required
+          {...register('city', { required: 'City is required' })}
+          error={Boolean(errors.city)}
+          helperText={errors.city?.message}
         />
         <TextField
           label="State"
           name="state"
-          value={selectedContact.state}
-          onChange={handleInput}
-          required
+          {...register('state', { required: 'State is required' })}
+          error={Boolean(errors.state)}
+          helperText={errors.state?.message}
         />
         <TextField
           label="Zip Code"
           name="zipCode"
-          value={selectedContact.zipCode}
-          onChange={handleInput}
-          required
-          helperText={lookupError ? 'Zip code could not be found...' : null}
-          inputProps={{
-            maxLength: 5,
-            pattern: '\\d{5}',
-          }}
+          {...register('zipCode', {
+            required: 'Zip code is required',
+            pattern: {
+              value: /^[0-9]{5}(?:-[0-9]{4})?$/,
+              message: 'Please enter a vaild 5 digit zip code',
+            },
+          })}
+          error={Boolean(errors.zipCode)}
+          helperText={errors.zipCode?.message}
+          // helperText={lookupError ? 'Zip code could not be found...' : null}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
@@ -224,7 +238,6 @@ export default function Form(
               </InputAdornment>
             ),
           }}
-          Í
         ></TextField>
       </Grid>
 
