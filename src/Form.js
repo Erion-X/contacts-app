@@ -9,7 +9,6 @@ import SearchIcon from '@mui/icons-material/Search';
 import lookupCityState from './zipLookup';
 import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
-import Stack from '@mui/material/Stack';
 import Grid from '@mui/material/Grid';
 
 export default function Form(
@@ -19,27 +18,32 @@ export default function Form(
   handleClosePopup,
   deleteContact
 ) {
-  const today = new Date().toISOString().slice(0, -14);
+  //Get ISO Format Date -- In Current Timezone
+  const date = new Date();
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  const today = `${year}-${month}-${day}`;
 
   const handleInput = (e) => {
     let value = e.target.value;
     //Enforcing Numeric Input on Phone Number and Zip Code
-    if (e.target.name === 'phoneNumber' || e.target.name === 'zipCode') {
-      value = value.replace(/\D/g, '');
-      //Enforcing US Phone Number Formatt
-      if (
-        e.target.name === 'phoneNumber' &&
-        value.length > 3 &&
-        value.length <= 6
-      ) {
-        value = `${value.slice(0, 3)}-${value.slice(3)}`;
-      } else if (value.length > 6) {
-        value = `${value.slice(0, 3)}-${value.slice(3, 6)}-${value.slice(
-          6,
-          10
-        )}`;
-      }
-    }
+    // if (e.target.name === 'phoneNumber' || e.target.name === 'zipCode') {
+    //   value = value.replace(/\D/g, '');
+    //   //Enforcing US Phone Number Formatt
+    //   if (
+    //     e.target.name === 'phoneNumber' &&
+    //     value.length > 3 &&
+    //     value.length <= 6
+    //   ) {
+    //     value = `${value.slice(0, 3)}-${value.slice(3)}`;
+    //   } else if (value.length > 6) {
+    //     value = `${value.slice(0, 3)}-${value.slice(3, 6)}-${value.slice(
+    //       6,
+    //       10
+    //     )}`;
+    //   }
+    // }
 
     setSelectedContact({ ...selectedContact, [e.target.name]: value });
   };
@@ -112,13 +116,11 @@ export default function Form(
       <Grid sx={12}>
         <TextField
           sx={{ m: 1 }}
-          fullWidth="true"
           label="First Name"
           name="firstName"
           value={selectedContact.firstName}
           onChange={handleInput}
           required
-          onError={'error'}
         />
 
         <TextField
@@ -145,6 +147,10 @@ export default function Form(
         value={selectedContact.phoneNumber}
         onChange={handleInput}
         required
+        inputProps={{
+          maxLength: 12,
+          pattern: '^\\d{0,3}(-\\d{0,3})?(-\\d{0,4})?$',
+        }}
       />
       <TextField
         type="date"
@@ -197,8 +203,11 @@ export default function Form(
           onChange={handleInput}
           required
           helperText={lookupError ? 'Zip code could not be found...' : null}
+          inputProps={{
+            maxLength: 5,
+            pattern: '\\d{5}',
+          }}
           InputProps={{
-            inputProps: { maxLength: 5, type: 'tel' },
             endAdornment: (
               <InputAdornment position="end">
                 <IconButton

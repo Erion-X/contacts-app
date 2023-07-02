@@ -20,9 +20,16 @@ const zipCityState = {
 };
 
 //Corrects All-Caps From API
-const capitalizeFirstLetter = (str) => {
-  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+const capEachWord = (str) => {
+  const words = str.toLowerCase().split(' ');
+  words.forEach(
+    (word, idx) =>
+      (words[idx] = word.charAt(0).toUpperCase().concat(word.slice(1)))
+  );
+
+  return words.join(' ');
 };
+console.log(capEachWord('NEW YORK'));
 
 export default async function lookupCityState(zipCode) {
   //Check Pre-loaded Memory for City/State
@@ -42,7 +49,7 @@ export default async function lookupCityState(zipCode) {
       });
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(response.data, 'text/xml');
-      const city = capitalizeFirstLetter(
+      const city = capEachWord(
         xmlDoc.getElementsByTagName('City')[0].innerHTML
       );
       const state = xmlDoc.getElementsByTagName('State')[0].innerHTML;
