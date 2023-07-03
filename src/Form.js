@@ -126,6 +126,24 @@ export default function Form(
         '& .MuiTextField-root': { m: 1, width: '25ch' },
       }}
     >
+      <div>
+        {Object.keys(errors).length > 0 && (
+          <div>
+            <p>
+              <Typography fontSize={'small'}>
+                Please fix the following errors:
+              </Typography>
+            </p>
+            <ul>
+              <Typography fontSize={'small'}>
+                {Object.values(errors).map((error, index) => (
+                  <li key={index}>{error.message}</li>
+                ))}
+              </Typography>
+            </ul>
+          </div>
+        )}
+      </div>
       <Box
         display="flex"
         justifyContent="space-between"
@@ -184,7 +202,15 @@ export default function Form(
         label="Date of Birth"
         name="DOB"
         type="date"
-        {...register('DOB', { required: 'Date of birth is required' })}
+        {...register('DOB', {
+          required: 'Date of birth is required',
+          validate: (dob) => {
+            return (
+              Date.parse(dob) <= Date.parse(today) ||
+              'Date of birth must be in the past.'
+            );
+          },
+        })}
         placeholder="none"
         InputLabelProps={{ shrink: true }}
         InputProps={{
