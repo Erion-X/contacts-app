@@ -12,6 +12,9 @@ import lookupCityState from './zipLookup';
 import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
+import Snackbar from '@mui/material/Snackbar';
+import React from 'react';
+import Alert from '@mui/material/Alert';
 
 //Get ISO Format Date -- In Current Timezone
 const date = new Date();
@@ -42,8 +45,8 @@ export default function Form(
     for (const key in selectedContact) {
       setValue(`${key}`, selectedContact[key]);
     }
-    //Added setValue temp. to eliminate dependency
-  }, [setValue, selectedContact]);
+    //Added reset & setValue temp. to eliminate dependency warning
+  }, [reset, setValue, selectedContact]);
 
   const onSave = (formData) => {
     updateContact(formData);
@@ -70,7 +73,8 @@ export default function Form(
   // Zip Code Button and Lookup
   const [zipLookupButton, setZipLookupButton] = useState(false);
   const [loadingZip, setLoadingZip] = useState(false);
-  // const [lookupError, setLookupError] = useState(false);
+  const [zipSuccess, setZipSuccess] = useState(false);
+  const [zipError, setZipError] = useState(false);
 
   const watchZipCode = watch('zipCode');
   useEffect(
@@ -93,16 +97,22 @@ export default function Form(
         //https://github.com/mui/material-ui/issues/17018
         setValue('state', result.state);
         trigger('state');
+
+        //User notifications
         setTimeout(() => {
           setLoadingZip(false);
         }, 600);
+        setZipSuccess(true);
+        setTimeout(() => {
+          setZipSuccess(false);
+        }, 3000);
       })
       .catch((error) => {
-        // setLoadingZip(false);
-        // setLookupError(true);
-        // setTimeout(() => {
-        //   setLookupError(false);
-        // }, 5000);
+        setLoadingZip(false);
+        setZipError(true);
+        setTimeout(() => {
+          setZipError(false);
+        }, 3000);
         console.error('Error:', error);
       });
   };
@@ -258,6 +268,25 @@ export default function Form(
         </Button>
         <Button onClick={() => handleClosePopup()}>Cancel</Button>
       </Box>
+
+      {(zipSuccess || zipError) && (
+        <Snackbar
+          open={zipSuccess || zipError}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+          sx={{ position: 'absolute' }}
+        >
+          <Alert
+            onClose={() => {
+              setZipError(false);
+              setZipSuccess(false);
+            }}
+            severity={zipSuccess ? 'success' : 'warning'}
+            sx={{ width: 'min' }}
+          >
+            {zipSuccess ? 'Zip code found!' : 'Zip code could not be found.'}
+          </Alert>
+        </Snackbar>
+      )}
     </Box>
   );
 }
