@@ -22,7 +22,6 @@ const today = `${year}-${month}-${day}`;
 
 export default function Form(
   selectedContact,
-
   handleClosePopup,
   updateContact,
   deleteContact
@@ -32,15 +31,19 @@ export default function Form(
     register,
     handleSubmit,
     formState: { errors },
-    // watch,
+    watch,
     setValue,
+    reset,
+    trigger,
   } = useForm();
 
   useEffect(() => {
+    reset();
     for (const key in selectedContact) {
       setValue(`${key}`, selectedContact[key]);
     }
-  }, [selectedContact]);
+    //Added setValue temp. to eliminate dependency
+  }, [setValue, selectedContact]);
 
   const onSave = (formData) => {
     updateContact(formData);
@@ -65,39 +68,41 @@ export default function Form(
   // }
 
   // Zip Code Button and Lookup
-  const [zipLookupActive, setZipLookupActive] = useState(false);
+  const [zipLookupButton, setZipLookupButton] = useState(false);
   const [loadingZip, setLoadingZip] = useState(false);
-  const [lookupError, setLookupError] = useState(false);
+  // const [lookupError, setLookupError] = useState(false);
 
-  useEffect(() => {
-    if (selectedContact.zipCode.length === 5) {
-      setZipLookupActive(true);
-    } else {
-      setZipLookupActive(false);
-    }
-  }, [selectedContact.zipCode]);
+  const watchZipCode = watch('zipCode');
+  useEffect(
+    () =>
+      /^[0-9]{5}(?:-[0-9]{4})?$/.test(watchZipCode)
+        ? setZipLookupButton(true)
+        : setZipLookupButton(false),
+    [watchZipCode]
+  );
 
-  const handleZipLookup = (e) => {
-    e.preventDefault();
+  const handleZipLookup = () => {
     setLoadingZip(true);
-    lookupCityState(selectedContact.zipCode)
+    lookupCityState(watchZipCode)
       .then((result) => {
-        // setSelectedContact({
-        //   ...selectedContact,
-        //   city: result.city,
-        //   state: result.state,
-        // });
-        //For Showcase Only
+        setValue('city', result.city);
+        //In case of error state, trigger forces re-validation
+        trigger('city');
+        //NOTE: Consider controller wrap to fix bug where placeholder is on top
+        //of textfield after setValue
+        //https://github.com/mui/material-ui/issues/17018
+        setValue('state', result.state);
+        trigger('state');
         setTimeout(() => {
           setLoadingZip(false);
         }, 600);
       })
       .catch((error) => {
-        setLookupError(true);
-        setLoadingZip(false);
-        setTimeout(() => {
-          setLookupError(false);
-        }, 3000);
+        // setLoadingZip(false);
+        // setLookupError(true);
+        // setTimeout(() => {
+        //   setLookupError(false);
+        // }, 5000);
         console.error('Error:', error);
       });
   };
@@ -229,9 +234,9 @@ export default function Form(
                   edge="end"
                   color="primary"
                   type="button"
-                  disabled={!zipLookupActive}
-                  onClick={(e) => {
-                    handleZipLookup(e);
+                  disabled={!zipLookupButton}
+                  onClick={() => {
+                    handleZipLookup();
                   }}
                 >
                   {loadingZip ? <CircularProgress /> : <SearchIcon />}
