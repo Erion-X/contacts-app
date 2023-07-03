@@ -29,7 +29,6 @@ const capEachWord = (str) => {
 
   return words.join(' ');
 };
-console.log(capEachWord('NEW YORK'));
 
 export default async function lookupCityState(zipCode) {
   //Check Pre-loaded Memory for City/State

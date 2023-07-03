@@ -6,20 +6,14 @@ export default function Popup(
   openPopup,
   selectedContact,
   handleClosePopup,
-  setSelectedContact,
+
   updateContact,
   deleteContact
 ) {
   return (
     <Dialog open={openPopup} maxWidth="sm">
       <DialogContent>
-        {Form(
-          selectedContact,
-          setSelectedContact,
-          updateContact,
-          handleClosePopup,
-          deleteContact
-        )}
+        {Form(selectedContact, handleClosePopup, updateContact, deleteContact)}
       </DialogContent>
     </Dialog>
   );

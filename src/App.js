@@ -35,25 +35,19 @@ function App() {
     setContactsList(contactsData);
   }, []);
 
-  //Opens Edit Contact Form
-  function editContact(singleContact) {
+  //Opens Add/Edit Contact Form
+  function handleOpenForm(singleContact = { ...emptyContact }) {
     setSelectedContact({ ...singleContact });
-    setOpenPopup(true);
-  }
-
-  //Opens Add Contact Form
-  function addContact() {
-    setSelectedContact({ ...emptyContact });
     setOpenPopup(true);
   }
 
   //Closes Edit/New Contact Form
   function handleClosePopup() {
-    setSelectedContact(emptyContact);
     setOpenPopup(false);
+    setSelectedContact(emptyContact);
   }
 
-  //Deletes contact
+  //Deletes Contact
   function deleteContact() {
     setContactsList(
       contactsList.filter((contact) => contact.id !== selectedContact.id)
@@ -63,14 +57,14 @@ function App() {
   }
 
   //Adds & Updates Existing Contacts
-  function updateContact() {
-    if (selectedContact.id === '') {
-      selectedContact.id = findLargestIdNumber() + 1;
-      setContactsList([selectedContact, ...contactsList]);
+  function updateContact(formData) {
+    if (formData.id === '') {
+      formData.id = findLargestIdNumber() + 1;
+      setContactsList([formData, ...contactsList]);
     } else {
       setContactsList(
         contactsList.map((contact) => {
-          return contact.id === selectedContact.id ? selectedContact : contact;
+          return contact.id === formData.id ? formData : contact;
         })
       );
     }
@@ -110,19 +104,18 @@ function App() {
               startIcon={<AddIcon />}
               variant="contained"
               color="secondary"
-              onClick={() => addContact()}
+              onClick={() => handleOpenForm()}
             >
               Add Contact
             </Button>
           </Toolbar>
         </AppBar>
-        <div>{ContactsTable(contactsList, editContact)}</div>
+        <div>{ContactsTable(contactsList, handleOpenForm)}</div>
         <div>
           {Popup(
             openPopup,
             selectedContact,
             handleClosePopup,
-            setSelectedContact,
             updateContact,
             deleteContact
           )}

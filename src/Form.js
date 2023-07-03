@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-
 import { useForm } from 'react-hook-form';
 
 import Box from '@mui/material/Box';
@@ -14,54 +13,56 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 
+//Get ISO Format Date -- In Current Timezone
+const date = new Date();
+const year = date.getFullYear();
+const month = String(date.getMonth() + 1).padStart(2, '0');
+const day = String(date.getDate()).padStart(2, '0');
+const today = `${year}-${month}-${day}`;
+
 export default function Form(
   selectedContact,
-  setSelectedContact,
-  updateContact,
+
   handleClosePopup,
+  updateContact,
   deleteContact
 ) {
-  //Get ISO Format Date -- In Current Timezone
-  const date = new Date();
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  const today = `${year}-${month}-${day}`;
+  //React-hook-form
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    // watch,
+    setValue,
+  } = useForm();
 
-  //REACT-HOOK-FORMS
-
-  const form = useForm({
-    defaultValues: { ...selectedContact },
-  });
-  const { register, handleSubmit, formState } = form;
-  const { errors } = formState;
+  useEffect(() => {
+    for (const key in selectedContact) {
+      setValue(`${key}`, selectedContact[key]);
+    }
+  }, [selectedContact]);
 
   const onSave = (formData) => {
-    console.log(errors);
+    updateContact(formData);
   };
 
-  const handleInput = (e) => {
-    let value = e.target.value;
-    //Enforcing Numeric Input on Phone Number and Zip Code
-    // if (e.target.name === 'phoneNumber' || e.target.name === 'zipCode') {
-    //   value = value.replace(/\D/g, '');
-    //   //Enforcing US Phone Number Formatt
-    //   if (
-    //     e.target.name === 'phoneNumber' &&
-    //     value.length > 3 &&
-    //     value.length <= 6
-    //   ) {
-    //     value = `${value.slice(0, 3)}-${value.slice(3)}`;
-    //   } else if (value.length > 6) {
-    //     value = `${value.slice(0, 3)}-${value.slice(3, 6)}-${value.slice(
-    //       6,
-    //       10
-    //     )}`;
-    //   }
-    // }
-
-    setSelectedContact({ ...selectedContact, [e.target.name]: value });
-  };
+  //Enforcing Numeric Input on Phone Number and Zip Code
+  // if (e.target.name === 'phoneNumber' || e.target.name === 'zipCode') {
+  //   value = value.replace(/\D/g, '');
+  //   //Enforcing US Phone Number Formatt
+  //   if (
+  //     e.target.name === 'phoneNumber' &&
+  //     value.length > 3 &&
+  //     value.length <= 6
+  //   ) {
+  //     value = `${value.slice(0, 3)}-${value.slice(3)}`;
+  //   } else if (value.length > 6) {
+  //     value = `${value.slice(0, 3)}-${value.slice(3, 6)}-${value.slice(
+  //       6,
+  //       10
+  //     )}`;
+  //   }
+  // }
 
   // Zip Code Button and Lookup
   const [zipLookupActive, setZipLookupActive] = useState(false);
@@ -81,11 +82,11 @@ export default function Form(
     setLoadingZip(true);
     lookupCityState(selectedContact.zipCode)
       .then((result) => {
-        setSelectedContact({
-          ...selectedContact,
-          city: result.city,
-          state: result.state,
-        });
+        // setSelectedContact({
+        //   ...selectedContact,
+        //   city: result.city,
+        //   state: result.state,
+        // });
         //For Showcase Only
         setTimeout(() => {
           setLoadingZip(false);
