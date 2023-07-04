@@ -15,6 +15,7 @@ import Grid from '@mui/material/Grid';
 import Snackbar from '@mui/material/Snackbar';
 import React from 'react';
 import Alert from '@mui/material/Alert';
+import List from '@mui/material/List';
 
 //Get ISO Format Date -- In Current Timezone
 const date = new Date();
@@ -50,25 +51,8 @@ export default function Form(
 
   const onSave = (formData) => {
     updateContact(formData);
+    reset();
   };
-
-  //Enforcing Numeric Input on Phone Number and Zip Code
-  // if (e.target.name === 'phoneNumber' || e.target.name === 'zipCode') {
-  //   value = value.replace(/\D/g, '');
-  //   //Enforcing US Phone Number Formatt
-  //   if (
-  //     e.target.name === 'phoneNumber' &&
-  //     value.length > 3 &&
-  //     value.length <= 6
-  //   ) {
-  //     value = `${value.slice(0, 3)}-${value.slice(3)}`;
-  //   } else if (value.length > 6) {
-  //     value = `${value.slice(0, 3)}-${value.slice(3, 6)}-${value.slice(
-  //       6,
-  //       10
-  //     )}`;
-  //   }
-  // }
 
   // Zip Code Button and Lookup
   const [zipLookupButton, setZipLookupButton] = useState(false);
@@ -129,18 +113,14 @@ export default function Form(
       <div>
         {Object.keys(errors).length > 0 && (
           <div>
-            <p>
-              <Typography fontSize={'small'}>
-                Please fix the following errors:
-              </Typography>
-            </p>
-            <ul>
-              <Typography fontSize={'small'}>
-                {Object.values(errors).map((error, index) => (
-                  <li key={index}>{error.message}</li>
-                ))}
-              </Typography>
-            </ul>
+            <List dense={'true'} fontSize={'small'}>
+              Please fix the following errors:
+              {Object.values(errors).map((error, index) => (
+                <Typography fontSize={'small'} key={index}>
+                  {error.message}
+                </Typography>
+              ))}
+            </List>
           </div>
         )}
       </div>
@@ -187,11 +167,27 @@ export default function Form(
       <TextField
         label="Phone Number"
         name="phoneNumber"
+        inputProps={{ maxLength: 12 }}
         {...register('phoneNumber', {
           required: 'Phone number is required',
           pattern: {
             value: /^\(?([0-9]{3})\)?[-.●]?([0-9]{3})[-.●]?([0-9]{4})$/,
-            message: 'Please enter a valid US phone number',
+            message: 'Please enter a 10 digit US phone number: 123-456-7890',
+          },
+          onChange: (e) => {
+            let value = e.target.value;
+            //Disregard non digit inputs
+            value = value.replace(/[^0-9]/g, '');
+            //Auto insert dashes to format ph # 123-456-7890
+            if (value.length > 3 && value.length <= 6) {
+              value = `${value.slice(0, 3)}-${value.slice(3)}`;
+            } else if (value.length > 6) {
+              value = `${value.slice(0, 3)}-${value.slice(3, 6)}-${value.slice(
+                6,
+                10
+              )}`;
+            }
+            e.target.value = value;
           },
         })}
         error={Boolean(errors.phoneNumber)}
@@ -253,11 +249,16 @@ export default function Form(
         <TextField
           label="Zip Code"
           name="zipCode"
+          inputProps={{ maxLength: 5 }}
           {...register('zipCode', {
             required: 'Zip code is required',
             pattern: {
               value: /^[0-9]{5}(?:-[0-9]{4})?$/,
               message: 'Please enter a vaild 5 digit zip code',
+            },
+            onChange: (e) => {
+              //Disregard non digit inputs
+              e.target.value = e.target.value.replace(/[^0-9]/g, '');
             },
           })}
           error={Boolean(errors.zipCode)}
