@@ -30,7 +30,7 @@ const capEachWord = (str) => {
   return words.join(' ');
 };
 
-export default async function lookupCityState(zipCode) {
+export default async function zipLookup(zipCode) {
   //Check Pre-loaded Memory for City/State
   if (zipCityState.hasOwnProperty(zipCode)) {
     return zipCityState[zipCode];

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { contactsData, emptyContact } from './contactData';
+import { contactsData, emptyContact } from './dataHelpers/contactData';
 
 import Container from '@mui/material/Container';
 import ContactsTable from './ContactsTable';

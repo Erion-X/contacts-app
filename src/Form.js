@@ -1,34 +1,24 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
+
+import DOBPicker from './formSubcomponents/DOBPicer';
+import PhoneNumber from './formSubcomponents/PhoneNumber';
+import ZipCode from './formSubcomponents/ZipCode';
 
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import { Button } from '@mui/material';
 import Divider from '@mui/material/Divider';
-import { InputAdornment } from '@mui/material';
-import { IconButton } from '@mui/material';
-import SearchIcon from '@mui/icons-material/Search';
-import lookupCityState from './zipLookup';
-import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
-import Snackbar from '@mui/material/Snackbar';
-import React from 'react';
-import Alert from '@mui/material/Alert';
 import List from '@mui/material/List';
-
-//Get ISO Format Date -- In Current Timezone
-const date = new Date();
-const year = date.getFullYear();
-const month = String(date.getMonth() + 1).padStart(2, '0');
-const day = String(date.getDate()).padStart(2, '0');
-const today = `${year}-${month}-${day}`;
 
 export default function Form(
   selectedContact,
-  handleClosePopup,
+  handleCloseForm,
   updateContact,
-  deleteContact
+  deleteContact,
+  alertFeedback
 ) {
   //React-hook-form
   const {
@@ -46,59 +36,12 @@ export default function Form(
     for (const key in selectedContact) {
       setValue(`${key}`, selectedContact[key]);
     }
-    //Added reset & setValue temp. to eliminate dependency warning
+    //Added reset & setValue to temp eliminate lint warning
   }, [reset, setValue, selectedContact]);
 
   const onSave = (formData) => {
     updateContact(formData);
     reset();
-  };
-
-  // Zip Code Button and Lookup
-  const [zipLookupButton, setZipLookupButton] = useState(false);
-  const [loadingZip, setLoadingZip] = useState(false);
-  const [zipSuccess, setZipSuccess] = useState(false);
-  const [zipError, setZipError] = useState(false);
-
-  const watchZipCode = watch('zipCode');
-  useEffect(
-    () =>
-      /^[0-9]{5}(?:-[0-9]{4})?$/.test(watchZipCode)
-        ? setZipLookupButton(true)
-        : setZipLookupButton(false),
-    [watchZipCode]
-  );
-
-  const handleZipLookup = () => {
-    setLoadingZip(true);
-    lookupCityState(watchZipCode)
-      .then((result) => {
-        setValue('city', result.city);
-        //In case of error state, trigger forces re-validation
-        trigger('city');
-        //NOTE: Consider controller wrap to fix bug where placeholder is on top
-        //of textfield after setValue
-        //https://github.com/mui/material-ui/issues/17018
-        setValue('state', result.state);
-        trigger('state');
-
-        //User notifications
-        setTimeout(() => {
-          setLoadingZip(false);
-        }, 600);
-        setZipSuccess(true);
-        setTimeout(() => {
-          setZipSuccess(false);
-        }, 3000);
-      })
-      .catch((error) => {
-        setLoadingZip(false);
-        setZipError(true);
-        setTimeout(() => {
-          setZipError(false);
-        }, 3000);
-        console.error('Error:', error);
-      });
   };
 
   return (
@@ -144,6 +87,7 @@ export default function Form(
         <TextField
           label="First Name"
           name="firstName"
+          required
           {...register('firstName', { required: 'First name is required' })}
           error={Boolean(errors.firstName)}
           helperText={errors.firstName?.message}
@@ -158,63 +102,16 @@ export default function Form(
         <TextField
           label="Last Name"
           name="lastName"
+          required
           {...register('lastName', { required: 'Last name is required' })}
           error={Boolean(errors.lastName)}
           helperText={errors.lastName?.message}
         />
       </Grid>
 
-      <TextField
-        label="Phone Number"
-        name="phoneNumber"
-        inputProps={{ maxLength: 12 }}
-        {...register('phoneNumber', {
-          required: 'Phone number is required',
-          pattern: {
-            value: /^\(?([0-9]{3})\)?[-.●]?([0-9]{3})[-.●]?([0-9]{4})$/,
-            message: 'Please enter a 10 digit US phone number: 123-456-7890',
-          },
-          onChange: (e) => {
-            let value = e.target.value;
-            //Disregard non digit inputs
-            value = value.replace(/[^0-9]/g, '');
-            //Auto insert dashes to format ph # 123-456-7890
-            if (value.length > 3 && value.length <= 6) {
-              value = `${value.slice(0, 3)}-${value.slice(3)}`;
-            } else if (value.length > 6) {
-              value = `${value.slice(0, 3)}-${value.slice(3, 6)}-${value.slice(
-                6,
-                10
-              )}`;
-            }
-            e.target.value = value;
-          },
-        })}
-        error={Boolean(errors.phoneNumber)}
-        helperText={errors.phoneNumber?.message}
-      />
+      {PhoneNumber(register, errors, alertFeedback)}
 
-      <TextField
-        label="Date of Birth"
-        name="DOB"
-        type="date"
-        {...register('DOB', {
-          required: 'Date of birth is required',
-          validate: (dob) => {
-            return (
-              Date.parse(dob) <= Date.parse(today) ||
-              'Date of birth must be in the past.'
-            );
-          },
-        })}
-        placeholder="none"
-        InputLabelProps={{ shrink: true }}
-        InputProps={{
-          inputProps: { max: today },
-        }}
-        error={Boolean(errors.DOB)}
-        helperText={errors.DOB?.message}
-      />
+      {DOBPicker(register, errors)}
 
       <Box my={2}>
         <Divider variant="middle">Address</Divider>
@@ -222,6 +119,7 @@ export default function Form(
       <TextField
         label="Address Line 1"
         name="addressLn1"
+        required
         {...register('addressLn1', { required: 'Address is required' })}
         error={Boolean(errors.addressLn1)}
         helperText={errors.addressLn1?.message}
@@ -235,6 +133,7 @@ export default function Form(
         <TextField
           label="City"
           name="city"
+          required
           {...register('city', { required: 'City is required' })}
           error={Boolean(errors.city)}
           helperText={errors.city?.message}
@@ -242,46 +141,13 @@ export default function Form(
         <TextField
           label="State"
           name="state"
+          required
           {...register('state', { required: 'State is required' })}
           error={Boolean(errors.state)}
           helperText={errors.state?.message}
         />
-        <TextField
-          label="Zip Code"
-          name="zipCode"
-          inputProps={{ maxLength: 5 }}
-          {...register('zipCode', {
-            required: 'Zip code is required',
-            pattern: {
-              value: /^[0-9]{5}(?:-[0-9]{4})?$/,
-              message: 'Please enter a vaild 5 digit zip code',
-            },
-            onChange: (e) => {
-              //Disregard non digit inputs
-              e.target.value = e.target.value.replace(/[^0-9]/g, '');
-            },
-          })}
-          error={Boolean(errors.zipCode)}
-          helperText={errors.zipCode?.message}
-          // helperText={lookupError ? 'Zip code could not be found...' : null}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton
-                  edge="end"
-                  color="primary"
-                  type="button"
-                  disabled={!zipLookupButton}
-                  onClick={() => {
-                    handleZipLookup();
-                  }}
-                >
-                  {loadingZip ? <CircularProgress /> : <SearchIcon />}
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
-        ></TextField>
+
+        {ZipCode(register, errors, watch, trigger, setValue, alertFeedback)}
       </Grid>
 
       <Box
@@ -293,27 +159,8 @@ export default function Form(
         <Button type="submit" variant="contained" color="primary">
           Save
         </Button>
-        <Button onClick={() => handleClosePopup()}>Cancel</Button>
+        <Button onClick={() => handleCloseForm()}>Cancel</Button>
       </Box>
-
-      {(zipSuccess || zipError) && (
-        <Snackbar
-          open={zipSuccess || zipError}
-          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-          sx={{ position: 'absolute' }}
-        >
-          <Alert
-            onClose={() => {
-              setZipError(false);
-              setZipSuccess(false);
-            }}
-            severity={zipSuccess ? 'success' : 'warning'}
-            sx={{ width: 'min' }}
-          >
-            {zipSuccess ? 'Zip code found!' : 'Zip code could not be found.'}
-          </Alert>
-        </Snackbar>
-      )}
     </Box>
   );
 }
