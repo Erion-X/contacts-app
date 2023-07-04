@@ -1,4 +1,16 @@
-import contactGen from './contactGen';
+export const emptyContact = {
+  id: '',
+  firstName: '',
+  middleName: '',
+  lastName: '',
+  DOB: '',
+  phoneNumber: '',
+  addressLn1: '',
+  addressLn2: '',
+  city: '',
+  state: '',
+  zipCode: '',
+};
 
 export const contactsData = [
   contactGen(
@@ -67,3 +79,31 @@ export const contactsData = [
     94612
   ),
 ];
+
+function contactGen(
+  id,
+  firstName,
+  middleName,
+  lastName,
+  DOB,
+  phoneNumber,
+  addressLn1,
+  addressLn2,
+  city,
+  state,
+  zipCode
+) {
+  return {
+    id,
+    firstName,
+    middleName,
+    lastName,
+    DOB,
+    phoneNumber,
+    addressLn1,
+    addressLn2,
+    city,
+    state,
+    zipCode,
+  };
+}

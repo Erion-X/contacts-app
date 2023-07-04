@@ -1,86 +1,71 @@
 import React, { useState, useEffect } from 'react';
-import { contactsData } from './contactData';
-import ContactsTable from './ContactsTable';
-import Popup from './Popup';
-import Box from '@mui/material/Box';
+import { contactsData, emptyContact } from './contactData';
+
 import Container from '@mui/material/Container';
-import AppBar from '@mui/material/AppBar';
-import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
+import ContactsTable from './ContactsTable';
+import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
+import AppBar from '@mui/material/AppBar';
+import MenuIcon from '@mui/icons-material/Menu';
 import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
 import AddIcon from '@mui/icons-material/Add';
+import Typography from '@mui/material/Typography';
+import Popup from './Popup';
 
 function App() {
-  const emptyContact = {
-    id: '',
-    firstName: '',
-    middleName: '',
-    lastName: '',
-    DOB: '',
-    phoneNumber: '',
-    addressLn1: '',
-    addressLn2: '',
-    city: '',
-    state: '',
-    zipCode: '',
-  };
-
-  const [contactsList, setContactsList] = useState([]);
+  const [contactList, setContactList] = useState([]);
   const [selectedContact, setSelectedContact] = useState(emptyContact);
-  const [openPopup, setOpenPopup] = useState(false);
+  const [openForm, setOpenForm] = useState(false);
 
   useEffect(() => {
-    setContactsList(contactsData);
+    setContactList(contactsData);
   }, []);
 
-  //Opens Add/Edit Contact Form
-  function handleOpenForm(singleContact = { ...emptyContact }) {
-    setSelectedContact({ ...singleContact });
-    setOpenPopup(true);
+  //Open Form Popup & Sets Contact to Edit or Default New Contact
+  function handleOpenForm(targetContact = { ...emptyContact }) {
+    setSelectedContact({ ...targetContact });
+    setOpenForm(true);
   }
 
-  //Closes Edit/New Contact Form
-  function handleClosePopup() {
-    setOpenPopup(false);
+  //Close Form Popup & Resets Selected Contact (New Contact Default)
+  function handleCloseForm() {
+    setOpenForm(false);
     setSelectedContact(emptyContact);
   }
 
-  //Deletes Contact
-  function deleteContact() {
-    setContactsList(
-      contactsList.filter((contact) => contact.id !== selectedContact.id)
-    );
-    setSelectedContact(emptyContact);
-    setOpenPopup(false);
-  }
-
-  //Adds & Updates Existing Contacts
+  //Add & Update Existing Contacts
   function updateContact(formData) {
     if (formData.id === '') {
-      formData.id = findLargestIdNumber() + 1;
-      setContactsList([formData, ...contactsList]);
+      formData.id = getUniqueId();
+      setContactList([formData, ...contactList]);
     } else {
-      setContactsList(
-        contactsList.map((contact) => {
+      setContactList(
+        contactList.map((contact) => {
           return contact.id === formData.id ? formData : contact;
         })
       );
     }
-    handleClosePopup();
+    handleCloseForm();
   }
 
-  //Function to find unique ID
-  function findLargestIdNumber() {
-    let largestId = 0;
-    for (let i = 0; i < contactsList.length; i++) {
-      const contact = contactsList[i];
-      if (contact.id > largestId) {
-        largestId = contact.id;
-      }
-    }
-    return largestId;
+  //Delete Contact
+  function deleteContact() {
+    setContactList(
+      contactList.filter((contact) => contact.id !== selectedContact.id)
+    );
+    setOpenForm(false);
+    setSelectedContact(emptyContact);
+  }
+
+  //Simulates DB, Returns Unique Id
+  function getUniqueId() {
+    let uniqueId = contactList.reduce(
+      (max, obj) => (obj.id > max ? obj.id : max),
+      1
+    );
+    uniqueId++;
+    return uniqueId;
   }
 
   return (
@@ -91,7 +76,6 @@ function App() {
             <IconButton
               size="large"
               edge="start"
-              // color="inherit"
               aria-label="menu"
               sx={{ mr: 2 }}
             >
@@ -110,12 +94,12 @@ function App() {
             </Button>
           </Toolbar>
         </AppBar>
-        <div>{ContactsTable(contactsList, handleOpenForm)}</div>
+        <div>{ContactsTable(contactList, handleOpenForm)}</div>
         <div>
           {Popup(
-            openPopup,
+            openForm,
             selectedContact,
-            handleClosePopup,
+            handleCloseForm,
             updateContact,
             deleteContact
           )}
