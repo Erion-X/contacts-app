@@ -11,13 +11,7 @@ import { Button } from '@mui/material';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
-import List from '@mui/material/List';
 import Stack from '@mui/material/Stack';
-import MapIcon from '@mui/icons-material/Map';
-import Card from '@mui/material/Card';
-import Paper from '@mui/material/Paper';
-import ListItem from '@mui/material/ListItem';
-import { styled } from '@mui/material/styles';
 
 export default function Form(
   selectedContact,

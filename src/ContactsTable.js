@@ -7,13 +7,14 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import ButtonBase from '@mui/material/ButtonBase';
 import Typography from '@mui/material/Typography';
+import Avatar from '@mui/material/Avatar';
 
 export default function ContactsTable(contactsList, editContact) {
   return (
     <div>
       <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 400 }}>
-          <TableHead color="gray">
+        <Table sx={{ minWidth: 450 }}>
+          <TableHead bgColor="#E8EAF6">
             <TableRow>
               <TableCell>
                 <Typography variant="body1">Name</Typography>
@@ -31,9 +32,20 @@ export default function ContactsTable(contactsList, editContact) {
               <TableRow key={idx}>
                 <TableCell>
                   <ButtonBase onClick={() => editContact(contact)}>
+                    <Avatar
+                      sx={{
+                        bgcolor: '#455A64',
+                        width: 32,
+                        height: 32,
+                        marginRight: 2,
+                      }}
+                    >
+                      {`${contact.lastName.charAt(0)}`}
+                    </Avatar>
+
                     <Typography variant="body1">
-                      {contact.firstName} {contact.middleName}{' '}
-                      {contact.lastName}
+                      {`    ${contact.firstName} ${contact.middleName}
+                      ${contact.lastName}`}
                     </Typography>
                   </ButtonBase>
                 </TableCell>
