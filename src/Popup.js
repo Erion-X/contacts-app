@@ -33,7 +33,7 @@ export default function Popup(
   }
 
   return (
-    <Dialog open={openForm} maxWidth="sm">
+    <Dialog open={openForm} maxWidth="md">
       <DialogContent>
         {Form(
           selectedContact,

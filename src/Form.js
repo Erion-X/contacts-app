@@ -12,6 +12,12 @@ import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import List from '@mui/material/List';
+import Stack from '@mui/material/Stack';
+import MapIcon from '@mui/icons-material/Map';
+import Card from '@mui/material/Card';
+import Paper from '@mui/material/Paper';
+import ListItem from '@mui/material/ListItem';
+import { styled } from '@mui/material/styles';
 
 export default function Form(
   selectedContact,
@@ -55,20 +61,6 @@ export default function Form(
         '& .MuiTextField-root': { m: 1, width: '25ch' },
       }}
     >
-      <div>
-        {Object.keys(errors).length > 0 && (
-          <div>
-            <List dense={'true'} fontSize={'small'}>
-              Please fix the following errors:
-              {Object.values(errors).map((error, index) => (
-                <Typography fontSize={'small'} key={index}>
-                  {error.message}
-                </Typography>
-              ))}
-            </List>
-          </div>
-        )}
-      </div>
       <Box
         display="flex"
         justifyContent="space-between"
@@ -85,86 +77,119 @@ export default function Form(
         ) : null}
       </Box>
 
-      <Grid>
-        <TextField
-          label="First Name"
-          name="firstName"
-          required
-          {...register('firstName', { required: 'First name is required' })}
-          error={Boolean(errors.firstName)}
-          helperText={errors.firstName?.message}
-        />
-
-        <TextField
-          label="Middle Name"
-          name="middleName"
-          {...register('middleName')}
-        />
-
-        <TextField
-          label="Last Name"
-          name="lastName"
-          required
-          {...register('lastName', { required: 'Last name is required' })}
-          error={Boolean(errors.lastName)}
-          helperText={errors.lastName?.message}
-        />
-      </Grid>
-
-      {PhoneNumber(
-        register,
-        errors,
-        setValue,
-        trigger,
-        isSubmitted,
-        alertFeedback
-      )}
-
-      {DOBPicker(register, errors)}
-
-      <Box my={2}>
-        <Divider variant="middle">Address</Divider>
+      <Box marginLeft={5} padding={1}>
+        <Grid container spacing={1}>
+          {Object.keys(errors).length > 0 && (
+            <span>
+              <Typography>Please fix the following errors:</Typography>
+              {Object.values(errors).map((error, index) => (
+                <Box xs="auto">
+                  <Typography fontSize={'small'} key={index}>
+                    {error.message}
+                  </Typography>
+                </Box>
+              ))}
+            </span>
+          )}
+        </Grid>
       </Box>
-      <TextField
-        label="Address Line 1"
-        name="addressLn1"
-        required
-        {...register('addressLn1', { required: 'Address is required' })}
-        error={Boolean(errors.addressLn1)}
-        helperText={errors.addressLn1?.message}
-      />
-      <TextField
-        label="Address Line 2"
-        name="addressLn2"
-        {...register('addressLn2')}
-      />
-      <Grid>
-        <TextField
-          label="City"
-          name="city"
-          required
-          InputLabelProps={{
-            shrink: getValues('city') === '' ? false : true,
-          }}
-          {...register('city', { required: 'City is required' })}
-          error={Boolean(errors.city)}
-          helperText={errors.city?.message}
-        />
-        <TextField
-          label="State"
-          name="state"
-          required
-          InputLabelProps={{
-            shrink: getValues('city') === '' ? false : true,
-          }}
-          {...register('state', { required: 'State is required' })}
-          error={Boolean(errors.state)}
-          helperText={errors.state?.message}
-        />
 
-        {ZipCode(register, errors, watch, setValue, trigger, alertFeedback)}
+      <Grid container spacing={1}>
+        <Box padding={3}>
+          <Stack spacing={2}>
+            <TextField
+              fullWidth
+              label="First Name"
+              name="firstName"
+              required
+              {...register('firstName', {
+                required: 'First name is required',
+              })}
+              error={Boolean(errors.firstName)}
+              helperText={errors.firstName?.message}
+            />
+
+            <TextField
+              label="Middle Name"
+              name="middleName"
+              {...register('middleName')}
+            />
+
+            <TextField
+              label="Last Name"
+              name="lastName"
+              required
+              {...register('lastName', {
+                required: 'Last name is required',
+              })}
+              error={Boolean(errors.lastName)}
+              helperText={errors.lastName?.message}
+            />
+
+            {PhoneNumber(
+              register,
+              errors,
+              setValue,
+              trigger,
+              isSubmitted,
+              alertFeedback
+            )}
+
+            {DOBPicker(register, errors)}
+          </Stack>
+        </Box>
+
+        <Divider orientation="vertical" flexItem></Divider>
+
+        <Box padding={3}>
+          <Stack spacing={2}>
+            <TextField
+              fullWidth
+              label="Address Line 1"
+              name="addressLn1"
+              required
+              {...register('addressLn1', {
+                required: 'Address is required',
+              })}
+              error={Boolean(errors.addressLn1)}
+              helperText={errors.addressLn1?.message}
+            />
+
+            <TextField
+              label="Address Line 2"
+              name="addressLn2"
+              {...register('addressLn2')}
+            />
+
+            <TextField
+              label="City"
+              name="city"
+              required
+              InputLabelProps={{
+                shrink: getValues('city') === '' ? false : true,
+              }}
+              {...register('city', { required: 'City is required' })}
+              error={Boolean(errors.city)}
+              helperText={errors.city?.message}
+            />
+
+            <TextField
+              label="State"
+              name="state"
+              required
+              InputLabelProps={{
+                shrink: getValues('city') === '' ? false : true,
+              }}
+              {...register('state', { required: 'State is required' })}
+              error={Boolean(errors.state)}
+              helperText={errors.state?.message}
+            />
+
+            {ZipCode(register, errors, watch, setValue, trigger, alertFeedback)}
+          </Stack>
+        </Box>
       </Grid>
-
+      <Grid></Grid>
       <Box
         display="flex"
         justifyContent="space-between"
