@@ -68,7 +68,7 @@ export default function ZipCode(
       label="Zip Code"
       name="zipCode"
       required
-      inputProps={{ maxLength: 5 }}
+      inputProps={{ inputMode: 'numeric', maxLength: 5 }}
       {...register('zipCode', {
         required: 'Zip code is required',
         pattern: {

@@ -69,6 +69,7 @@ export default function PhoneNumber(
       label="Phone Number"
       name="phoneNumber"
       required
+      inputProps={{ inputMode: 'numeric' }}
       {...register('phoneNumber', {
         required: 'Phone number is required',
         pattern: {
