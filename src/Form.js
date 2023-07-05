@@ -30,6 +30,7 @@ export default function Form(
     reset,
     trigger,
     formState: { isSubmitted },
+    getValues,
   } = useForm();
 
   useEffect(() => {
@@ -142,6 +143,9 @@ export default function Form(
           label="City"
           name="city"
           required
+          InputLabelProps={{
+            shrink: getValues('city') === '' ? false : true,
+          }}
           {...register('city', { required: 'City is required' })}
           error={Boolean(errors.city)}
           helperText={errors.city?.message}
@@ -150,6 +154,9 @@ export default function Form(
           label="State"
           name="state"
           required
+          InputLabelProps={{
+            shrink: getValues('city') === '' ? false : true,
+          }}
           {...register('state', { required: 'State is required' })}
           error={Boolean(errors.state)}
           helperText={errors.state?.message}

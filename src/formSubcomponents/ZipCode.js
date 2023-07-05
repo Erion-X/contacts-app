@@ -33,6 +33,7 @@ export default function ZipCode(
   //Digit Only Input w/ Feedback
   function handleZipInput(e) {
     let value = e.target.value;
+    console.log(register.zipCode);
     e.target.value = e.target.value.replace(/[^0-9]/g, '');
     if (value !== e.target.value) {
       alertFeedback('error', 'Only numbers allowed', 600);
