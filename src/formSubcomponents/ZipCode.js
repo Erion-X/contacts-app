@@ -12,8 +12,8 @@ export default function ZipCode(
   register,
   errors,
   watch,
-  trigger,
   setValue,
+  trigger,
   alertFeedback
 ) {
   // Zip Code Button and Lookup Status Indicator States
@@ -30,11 +30,16 @@ export default function ZipCode(
     [watchZipCode]
   );
 
-  //Digit Only Input
+  //Digit Only Input w/ Feedback
   function handleZipInput(e) {
+    let value = e.target.value;
     e.target.value = e.target.value.replace(/[^0-9]/g, '');
+    if (value !== e.target.value) {
+      alertFeedback('error', 'Only numbers allowed', 600);
+    }
   }
 
+  //Returns Hardcoded or USPS API Call City/State & Alerts User
   const handleZipLookup = () => {
     setLoadingZip(true);
     zipLookup(watchZipCode)
@@ -44,7 +49,7 @@ export default function ZipCode(
         setValue('state', result.state);
         trigger('state');
 
-        //User notifications
+        //Feedbaback
         setTimeout(() => {
           setLoadingZip(false);
         }, 500);

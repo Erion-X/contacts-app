@@ -29,6 +29,7 @@ export default function Form(
     setValue,
     reset,
     trigger,
+    formState: { isSubmitted },
   } = useForm();
 
   useEffect(() => {
@@ -109,7 +110,14 @@ export default function Form(
         />
       </Grid>
 
-      {PhoneNumber(register, errors, alertFeedback)}
+      {PhoneNumber(
+        register,
+        errors,
+        setValue,
+        trigger,
+        isSubmitted,
+        alertFeedback
+      )}
 
       {DOBPicker(register, errors)}
 
@@ -147,7 +155,7 @@ export default function Form(
           helperText={errors.state?.message}
         />
 
-        {ZipCode(register, errors, watch, trigger, setValue, alertFeedback)}
+        {ZipCode(register, errors, watch, setValue, trigger, alertFeedback)}
       </Grid>
 
       <Box
