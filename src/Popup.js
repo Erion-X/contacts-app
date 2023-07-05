@@ -18,11 +18,9 @@ export default function Popup(
   const [alertType, setAlertType] = useState('');
 
   function alertFeedback(type, msg, timeout = 2000) {
-    console.log('got alert feedback: ', type, msg);
     setAlertMsg(msg);
     setAlertType(type);
     setAlertNotify(true);
-    console.log(alertNotify, alertType, alertMsg);
     setTimeout(() => {
       closeAlertFeedback();
     }, timeout);
